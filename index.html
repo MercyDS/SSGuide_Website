@@ -36,6 +36,27 @@
             </div>
         </nav>
 
+        <!-- Sidebar overlay (click to close) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <img src="Logos/Logo.svg" alt="Logo" class="sidebar-logo">
+                    <span class="sidebar-title">Course Guide</span>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="#">Home</a>
+                    <a href="#">Explore Careers</a>
+                    <a href="#">Assessments</a>
+                    <a href="#">Courses</a>
+                    <a href="#">Universities</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </nav>
+            </aside>
+        </body>
+
         <!-- Main Search Section Box (Independent Block Outside Nav) -->
         <div id="search-box-container" class="search-container">
             <div class="search-wrapper">
@@ -146,6 +167,43 @@
 
 <!... JavaScript part of the code...> 
         <script>
+
+            (function() {
+                const menuToggle = document.querySelector('.menu-toggle');
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebar-overlay');
+
+                function openSidebar() {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                menuToggle.classList.add('menu-open');
+                }
+
+                function closeSidebar() {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    menuToggle.classList.remove('menu-open');
+                }
+
+                menuToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (sidebar.classList.contains('active')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+
+                overlay.addEventListener('click', closeSidebar);
+
+                // Close sidebar when pressing Escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                        closeSidebar();
+                    }
+                });
+            })();
+
             window.addEventListener('load', function(){
                 var loaderWrapper = document.getElementById('load_wrapper');
                 var logoImg = document.getElementById('logo_img');

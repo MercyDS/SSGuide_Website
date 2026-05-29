@@ -71,13 +71,64 @@ html, body {
 }
 
 .menu-toggle {
+   position: relative;
+    /* optional: add a fixed size so the circle doesn't shift layout */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     cursor: pointer;
-    color: #111111;
-    padding: 0;
-    display: flex;
-    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.menu-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    border: 2px solid #0056b3;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    z-index: 0;
+}
+
+.menu-toggle.menu-open::before {
+    width: 36px;
+    height: 36px;
+    opacity: 1;
+}
+
+.menu-toggle svg {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+/* Transform each rect inside the SVG */
+.menu-toggle svg rect {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform-origin: center;
+}
+
+.menu-toggle.menu-open svg rect:nth-child(1) {
+    transform: translateY(15px) rotate(45deg);
+}
+
+.menu-toggle.menu-open svg rect:nth-child(1) {
+    transform: translateY(34px) rotate(45deg);
+}
+.menu-toggle.menu-open svg rect:nth-child(2) {
+    opacity: 0;
+}
+.menu-toggle.menu-open svg rect:nth-child(3) {
+    transform: translateY(-26px) rotate(-45deg);
 }
 
 .menu-toggle:hover {
@@ -539,4 +590,85 @@ html, body {
     width: 100%;
     background-color: purple;
     height: 500px;
+}
+
+/* ---------- Sidebar & Overlay ---------- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;               /* hidden off-screen */
+    width: 280px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+    z-index: 300;
+    overflow-y: auto;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sidebar.active {
+    left: 0;                    /* slides in */
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-logo {
+    width: 32px;
+    height: auto;
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sidebar-nav a {
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.sidebar-nav a:hover {
+    background: #f4f4f4;
+    color: #0056b3;
 }
