@@ -57,7 +57,7 @@ html, body {
     top: 0;
     left: 0;
     width: 100%; /* Restores the full horizontal span */
-    z-index: 100; /* Keeps it layered safely above page content */
+    z-index: 400; /* Keeps it layered safely above page content */
 
     display: flex;
     justify-content: flex-start; /* Stacks items from the left wall */
@@ -100,8 +100,8 @@ html, body {
 }
 
 .menu-toggle.menu-open::before {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     opacity: 1;
 }
 
@@ -616,7 +616,7 @@ html, body {
     top: 0;
     left: -280px;               /* hidden off-screen */
     width: 280px;
-    height: 100%;
+    height: cal(100%-70px);
     background: #ffffff;
     box-shadow: 2px 0 12px rgba(0,0,0,0.1);
     z-index: 300;
