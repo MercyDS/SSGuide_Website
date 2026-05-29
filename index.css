@@ -1,0 +1,542 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 70px auto 0px auto;
+    font-family: sans-serif;
+}
+
+/* Add overflow-x: hidden to lock the viewport scaling on mobile devices */
+html, body {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+}
+
+
+#load_wrapper{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:#ffffff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    transition: opacity 0.5s ease;
+}
+
+#logo_img{
+    width: 50vw;
+    max-width: 300px;
+    min-width: 100px;
+    height:auto;
+}
+
+.ember-effect {
+    animation: emberPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes emberPulse {
+    0%, 100%{
+        filter: brightness(1);
+    }
+
+    50%{
+        filter: brightness(0);
+    }
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; /* Restores the full horizontal span */
+    z-index: 100; /* Keeps it layered safely above page content */
+
+    display: flex;
+    justify-content: flex-start; /* Stacks items from the left wall */
+    align-items: center;        /* Centers everything vertically */
+    padding: 12px 16px;         /* Cleaner spacing around edges */
+    background-color: #ffffff;
+    border-bottom: 1px solid #f4f4f4; /* Subtle separation line */
+     isolation: isolate; /*fix bug. I'm still confused how I did this. I would comeback later*/
+    -webkit-transform: translate3d(0, 0, 0); /* Fixes the z-index stacking context for the search bar animation. For ios, safari & old chrome*/
+    transform: translate3d(0, 0, 0); /*Fix same problems for modern browswers including new chrome broswer*/
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #111111;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.menu-toggle:hover {
+    color: #0056b3;
+}
+
+/* THE FIX: Groups logo and text, then pushes icons to the right edge */
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;          /* Space between your logo image and text */
+    margin-left: 12px;  /* Space between hamburger and your logo image */
+    margin-right: auto; /* MAGIC TRICK: Absorbs all space to push icons right */
+}
+
+.logo_left {
+    display: block;
+    width: 32px;
+    height: auto;
+}
+
+/* Stacks main title and subtitle vertically */
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    font-family: sans-serif;
+    line-height: 1.2;
+}
+
+.brand-subtitle {
+    font-size: 11px;
+    color: #666666;
+    font-family: sans-serif;
+    font-weight: 400;
+}
+
+#icon-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;          /* Space between bell and user profile icon */
+}
+
+.logo_right {
+    width: 30px;
+    height: auto;
+    cursor: pointer;
+}
+
+#bell {
+    width: 16px;
+}
+
+.search-container {
+    padding: 15px;
+    width: 100%;
+    max-width: 600px; 
+    margin: 0 auto;   
+    opacity: 0;       
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 8px;
+    gap: 6px;
+}
+
+.search-input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    font-size: 12px;
+}
+/* THE ANIMATION TRIGGER CLASS (Fires via JavaScript) */
+.search-animate {
+    opacity: 1;
+    /* Combines the slide-in and the vibration animations */
+    animation: drawFromLeft 0.5s ease-out forwards, vibrateShake 0.15s linear 0.5s 2;
+}
+.search-animate2 {
+    opacity: 1;
+    /* Combines the slide-in and the vibration animations */
+    animation: drawFromRight 0.5s ease-out forwards, vibrateShake 0.15s linear 0.5s 2;
+}
+/* Animation 1: Draws smoothly from the left wall */
+@keyframes drawFromLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes drawFromRight {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animation 2: Brief left-and-right vibration upon hitting the center */
+@keyframes vibrateShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+}
+
+.first-box {
+    width: 100%;
+    max-width: 600px; /* Constrained to match your clean search bar limit */
+    margin: 20px auto;
+    padding: 24px;
+    background-color: #f8faff; /* Light premium background tint from the UI image */
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    opacity: 0;
+}
+
+#first-half {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#second-half {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+#logo_illustration {
+    width: 100%;
+    height: auto;
+    max-width: 250px; /* Keeps the graphic from dominating text layout */
+}
+
+#welcome {
+    font-family: sans-serif;
+    color: #666666;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+#quote {
+    font-family: sans-serif;
+    color: #0d1b2a;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+/* Matches the deep branding blue accent color on your text highlight */
+#blue-highlight {
+    color: #0056b3; 
+}
+
+#do-now {
+    font-family: sans-serif;
+    color: #4a5568;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+#Menu1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Base button setups matching the clean rounded UI pill buttons */
+.menu1-button {
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Left Pill Button: Blue fill with white text */
+#explore {
+    background-color: #0056b3;
+    color: #ffffff;
+    border: none;
+}
+
+#explore:hover {
+    background-color: #004094;
+    transform: translateY(-1px); /* Clean alternative to your increase animation */
+}
+
+/* Right Pill Button: White fill with a clean outline stroke */
+#assessment {
+    background-color: transparent;
+    color: #0056b3;
+    border: 1px solid #0056b3;
+}
+
+#assessment:hover {
+    background-color: rgba(0, 86, 179, 0.05);
+    transform: translateY(-1px);
+}
+
+.open-box-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+    max-width: 1200px;
+	background-color: transparent;
+	color: black;
+    margin: 0 auto;
+	padding: 15px;
+	box-sizing: border-box;
+}
+
+.open-box-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+#second-box {
+	display: flex;
+	width: 100%;
+	background-color: transparent;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	flex-wrap: wrap; /* Allows icons to drop to next line on small screens */
+    margin-bottom: 15px;
+}
+
+#expand-open-box {
+	color: #0056b3;
+	font-size: 12px;
+	background-color: transparent;
+	border: none;
+	padding: 0;
+	font-family: inherit;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.Menu2 {
+	display: flex;
+	flex-direction: column;   /* Stacks inner box and text vertically */
+	align-items: center;
+	justify-content: center;
+	flex: 1;                  /* Distributes width evenly */
+	min-width: 75px;          /* Prevents boxes from squishing too small */
+	padding: 12px 8px;
+	border: none;
+	border-radius: 12px;      /* Rounded corners for the outer container */
+	cursor: pointer;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+	
+	/* Semi-transparent background (Red, Green, Blue, Opacity) */
+	background-color: rgba(0, 86, 179, 0.08); 
+}
+
+
+.Menu2:hover {
+	background-color: rgba(0, 86, 179, 0.15); /* Deepens opacity on hover */
+}
+
+.Menu2:active {
+	transform: scale(0.95);
+}
+
+
+.icon-box-inner {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	margin-bottom: 8px;       /* Pushes the text label down */
+}
+
+.icon-box-inner img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;      /* Keeps the aspect ratio of your SVGs intact */
+}
+
+/* Bottom Text Styling */
+.button-label {
+	font-size: 11px;
+	font-weight: 500;
+	color: #333333;
+	text-align: center;
+	white-space: nowrap;      /* Prevents text from breaking into two lines */
+}
+
+.hidden-option {
+    display: none !important;
+}
+
+#recommended {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+	box-sizing: border-box;
+}
+
+#expand-open-box2 {
+    color: #0056b3;
+    font-size: 12px;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.skeleton-image {
+    background: #e2e8f0;
+    background: linear-gradient(
+        90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+    border-radius: 20px;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 60px;
+    margin-bottom: 12px;
+}
+
+/*Shimmer movement*/
+
+@keyframes shimmer {
+    0% {background-position: 200% 0;}
+    100% {background-position: -200% 0;}
+
+}
+
+.card {
+    max-width: 1200px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+#progress-body {
+    display: flex;
+    justify-content: center;
+    padding: 0px 15px;
+    max-width: 1200px;
+    align-items: center;
+    margin: 0px auto;
+}
+
+#progress-body-inner {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: #e2e8f0;
+    border: 0 15px;
+    padding: 0px auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+#recorD {
+    width: 30%;
+    height: auto;
+    opacity: 30%;
+}
+
+#reask {
+	flex-direction: row;
+	padding: 15px;
+	justify-content: space-around;
+    background-color:#a3baf6;
+    border-radius: 8px;
+    align-items: center;
+}
+
+#target {
+	width: 60px;
+}
+
+#start-assessment {
+    background-color: #0056b3;
+    color: #ffffff;
+    border: none;
+    padding: 8px;
+    align-items: center;
+    line-height: 1;
+    margin: 0;
+}
+
+#start-assessment:hover {
+    background-color: #004094;
+    transform: translateY(-1px); /* Clean alternative to your increase animation */
+}
+
+#target-head-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    font-family: sans-serif;
+    line-height: 1.2;
+}
+
+#target-main-text {
+    font-size: 12px;
+    color: #666666;
+    font-family: sans-serif;
+    font-weight: 400;
+}
+
+#reask-container {
+    margin: 30px auto;
+}
+
+#organize-reask {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+#page-half {
+    width: 100%;
+    background-color: purple;
+    height: 500px;
+}
