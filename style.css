@@ -413,18 +413,39 @@ html, body {
 	transition: background-color 0.2s ease, transform 0.1s ease;
 	
 	/* Semi-transparent background (Red, Green, Blue, Opacity) */
-	background-color: rgba(0, 86, 179, 0.08); 
+	background-color: rgba(0, 86, 179, 0.65); 
 }
 
 
 .Menu2:hover {
-	background-color: rgba(0, 86, 179, 0.15); /* Deepens opacity on hover */
+	background-color: rgba(0, 86, 179, 0.15) !important; /* Deepens opacity on hover */
 }
 
 .Menu2:active {
 	transform: scale(0.95);
 }
 
+#subject-1 {
+    background-color: #1042cd47;
+}
+#career {
+    background-color: #40aa5047;
+}
+#course {
+        background-color: #551ed547;
+}
+#university {
+        background-color: #f7902f47;
+}
+#admission {
+    background-color: #ec133647;
+}
+#bot {
+    background-color: #0a708b47;
+}
+#none {
+    background-color: #5e5c6447;
+}
 
 .icon-box-inner {
 	display: flex;
