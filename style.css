@@ -412,8 +412,6 @@ html, body {
 	cursor: pointer;
 	transition: background-color 0.2s ease, transform 0.1s ease;
 	
-	/* Semi-transparent background (Red, Green, Blue, Opacity) */
-	background-color: rgba(0, 86, 179, 0.65); 
 }
 
 
@@ -692,4 +690,143 @@ html, body {
 .sidebar-nav a:hover {
     background: #f4f4f4;
     color: #0056b3;
+}
+
+/*ABOUT PAGE*/
+/*ABOUT PAGE*/
+/*ABOUT PAGE*/
+
+#about-page {
+    width: 100%;
+    background-color: #800080;
+}
+
+/*Implementing the login page*/
+/* ----- Login Page Styles ----- */
+/* ----- Shared Auth Page Styles ----- */
+#body_equ {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f4f0f7;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#on-top-logo {
+    width: 80px;
+    margin-bottom: 30px;
+}
+
+/* Purple card */
+#frame1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+    background-color: #680068;
+    box-shadow: 5px 5px 15px rgba(52, 0, 52, 0.6);
+    border-radius: 16px;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+/* Each panel (login or register) */
+.auth-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Title text */
+.auth-title {
+    font-family: "Segoe UI", "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 28px;
+    color: #ffffff;
+    margin-bottom: 25px;
+}
+
+/* Form container */
+#frame2 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 15px;
+}
+
+/* Labels */
+.auth-form label {
+    font-family: Georgia, serif;
+    color: #f0e6f6;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Input fields */
+.clean {
+    background-color: transparent;
+    border: 2px solid #8d8d8d;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.clean::placeholder {
+    color: #dcd0e6;
+    opacity: 0.8;
+}
+
+.clean:focus {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+/* Submit buttons */
+#submit-login,
+#submit-register {
+    background-color: #1e0e22;
+    border: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-family: "Segoe UI", "Inter", sans-serif;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+#submit-login:hover,
+#submit-register:hover {
+    background-color: #2d1a30;
+}
+
+/* Switch between forms */
+.switch-text {
+    color: #e0d0f0;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.switch-text span {
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
 }
