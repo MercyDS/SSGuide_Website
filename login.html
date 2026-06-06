@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="login-page">
     <div id="body_equ">
         <img id="on-top-logo" src="Logos/Logo.svg" alt="Course Guide Logo">
 
@@ -16,8 +16,8 @@
                 <span class="auth-title">Login</span>
                 <div class="frame" id="frame2">
                     <form id="login-form" class="auth-form">
-                        <label for="login-email">Email</label>
-                        <input type="email" id="login-email" class="clean" placeholder="example@gmail.com" required>
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" class="clean" placeholder="Enter your username" required>
 
                         <label for="login-password">Password</label>
                         <input type="password" id="login-password" class="clean" placeholder="••••••••" required>
@@ -33,8 +33,8 @@
                 <span class="auth-title">Create Account</span>
                 <div class="frame" id="frame2">
                     <form id="register-form" class="auth-form">
-                        <label for="reg-name">Full Name</label>
-                        <input type="text" id="reg-name" class="clean" placeholder="John Doe" required>
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" class="clean" placeholder="Choose a username" required>
 
                         <label for="reg-email">Email</label>
                         <input type="email" id="reg-email" class="clean" placeholder="example@gmail.com" required>
@@ -61,20 +61,19 @@
             document.getElementById('login-panel').style.display = 'flex';
         });
 
-        // ========== API base (change when live) ==========
         const API_BASE = 'http://ssguide.local/wp-json';
 
-        // ========== Login handler ==========
+        // ---------- LOGIN ----------
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
+            const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
 
             try {
                 const res = await fetch(`${API_BASE}/jwt-auth/v1/token`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: email, password })
+                    body: JSON.stringify({ username, password })
                 });
                 if (!res.ok) {
                     const err = await res.json();
@@ -82,38 +81,35 @@
                 }
                 const data = await res.json();
                 localStorage.setItem('jwtToken', data.token);
-                // Redirect to main dashboard page
                 window.location.href = 'index.html';
             } catch (error) {
                 alert(error.message);
             }
         });
 
-        // ========== Registration handler ==========
+        // ---------- REGISTER ----------
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value;
+            const username = document.getElementById('reg-username').value;
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
 
             try {
-                // This endpoint requires the WP REST User plugin or a custom route
                 const res = await fetch(`${API_BASE}/wp/v2/users/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: email, email, password, display_name: name })
+                    body: JSON.stringify({ username, email, password })
                 });
                 if (!res.ok) {
                     const err = await res.json();
                     throw new Error(err.message || 'Registration failed');
                 }
-                alert('Account created! Please log in.');
-                // Switch to login panel
+                alert('Account created! You can now log in.');
                 document.getElementById('show-login').click();
             } catch (error) {
                 alert(error.message);
             }
         });
-    </script>   <!-- we'll add the JS below -->
+    </script>
 </body>
 </html>
