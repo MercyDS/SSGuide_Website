@@ -1,289 +1,131 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Course Guide</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <div id="load_wrapper">
-            <div id="loader">
-                <img id="logo_img" class="ember-effect" src="Logos/Preload_logo.svg" alt="pre load image">
-            </div>
-        </div>
+   	<head>
+		<meta charset="UTF-8">
+		<title>Course Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="style_idex.css">
+	</head>
+	<body>
 
-        <nav class="navbar">
-            <button class="menu-toggle" aria-label="Toggle Menu">
-                <svg viewBox="0 0 100 80" width="18" height="18" fill="currentColor">
-                    <rect width="100" height="12" rx="6"></rect>
-                    <rect y="30" width="100" height="12" rx="6"></rect>
-                    <rect y="60" width="66" height="12" rx="6"></rect>
-                </svg>
-            </button>
+		<div id="slider-container">
+			<div id="slide1" class="slide active">
+				<div id="ssg-text"><img src="Logos/ssgtext.svg" alt="ssguide"/></div>
 
-            <div class="logo-group">
-                <img class="logo_left" src="Logos/Logo.svg" alt="Course Guidance Portal Logo">
-                <div class="logo-text">
-                    <span class="brand-title">Course Guide</span>
-                    <span class="brand-subtitle">For Secondary Students</span>
-                </div>
-            </div>
+				<div id="slide1-cover"><img src="Logos/slide1-cover.svg" alt="a student studying" /></div>
 
-            <div id="icon-container">
-                <img class="logo_right" id="bell" src="Logos/Icon_bell.svg" alt="Bell Logo">
-                <img class="logo_right" src="Logos/Icon_user.svg" alt="User Logo">
-            </div>
-        </nav>
+				<button id="yellow-button" onclick="window.location.href='login.html'">LOG IN</button>
 
-        <!-- Sidebar overlay (click to close) -->
-        <div class="sidebar-overlay" id="sidebar-overlay"></div>
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="Logos/Logo.svg" alt="Logo" class="sidebar-logo">
-                <span class="sidebar-title">Course Guide</span>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="#">Home</a>
-                <a href="#">Explore Careers</a>
-                <a href="#">Assessments</a>
-                <a href="#">Courses</a>
-                <a href="#">Universities</a>
-                <a href="/about.html">About</a>
-                <a href="#">Contact</a>
-            </nav>
-        </aside>
+				<div id="socials">
+					<button class="activE" id="lin" onclick="window.location.href='https://wwww.linkedin.com/in/emmanuel-ezeh-3a7529248', '_blank	'"><img src="Logos/linkedin.svg" alt="linkedin"></button>
+					<button class="activE" id="tel"><img src="Logos/telegram.svg" alt="telegram" onclick="window.open('https://'t.me/+QbBOyklqj_g2ZjVk','_blank')" aria-label="join Telegram Group"></button>
+					<button class="activE" id="pho"><img src="Logos/phone.svg" alt="phone" onclick="window.location.href='tel:+2348135209819'"></button>
+					<button class="activE" id="git" onclick="window.location.href='https://github.com/MercyDS/SSGuide_Website'"><img src="Logos/github.svg" alt="github"></button>
+					<button class="activE" id="ema"><img src="Logos/email.svg" alt="email" onclick="window.location.href='mailto:ezehe3217@gmail.com?subject=Hello&body=Hi%20Emmanuel'"></button>
+				</div>
+			</div>
 
-        <!--MAIN CONTENT (hidden until authenticated)-->
-        <div id="main-content" style="display: none;">
-            <div id="search-box-container" class="search-container">
-                <div class="search-wrapper">
-                    <img class="search-icon" src="Logos/Icon_lens.svg" alt="Search Icon" onerror="this.style.display='none'">
-                    <input type="text" placeholder="Search for courses, careers, or subjects..." class="search-input">
-                </div>
-            </div>
-            <div id="purple" class="first-box">
-                <!-- Grouped left side elements into a single clean 50% flex column box -->
-                <div id="first-half">
-                    <div id="greetings">
-                        <!-- Fixed typo "ack" to "back" -->
-                        <p id="welcome">Welcome back, <span id="user">User!</span> 👋</p>
-                        <h1 id="quote">Your future starts with the <span id="blue-highlight">right choices today</span></h1>
-                        <p id="do-now">Explore careers, select the right subjects, and achieve your dreams.</p>
-                    </div>
-        
-                    <div id="Menu1">
-                        <!-- Changed wrapper elements to modern semantic buttons -->
-                        <button id="explore" class="menu1-button">Explore Careers</button>
-                        <button id="assessment" class="menu1-button blue-btn">Take Assessment</button>
-                    </div>
-                </div>
+			<div id="slide2" class="slide">
+				<h3 class="head-writeup">Our Story: Why We Exist</h3>
+				<p class="writeup">Every year, over 1.8 million Nigerian students sit for the Senior Secondary Certificate Examination (SSCE), both internal (WAEC/NECO) and external (GCE). They spend six formative years in secondary school—years that are supposed to prepare them for life, for careers, for purpose. Yet, when it’s time to choose a university course, a polytechnic programme, or a vocational path, the vast majority of these students are navigating in the dark.</p>
+				<p class="writeup">Data from the Joint Admissions and Matriculation Board (JAMB) consistently shows that a huge percentage of candidates apply for courses they don’t fully understand, guided only by hearsay, peer pressure, or parental expectations. The result? High dropout rates, course changes, frustration, and a mismatch between Nigeria’s workforce needs and the skills being produced.
+</p>
+				<h3 class="head-writeup">We buuilt Course Guide to change that narrative</h3>
 
-                <!-- Right side handles the 50% vector illustration spacing flawlessly -->
-                <div id="second-half">
-                    <img id="logo_illustration" src="Logos/Student.svg" alt="A Student Working on Computer"/>
-                </div>
-            </div>
+				<p class="writeup">We are not just another educational website. We are a decision‑making companion. Our mission is simple: to give every secondary school student—whether in a bustling city like Lagos or a quiet village in Ebonyi State—the tools, knowledge, and confidence to decide what comes next. Because choosing a career shouldn’t be a gamble. It should be an informed, guided, and exciting journey.
+</p>
+			</div>
 
-            <div class="open-box-container">
-	            <div class="open-box-head">
-		            <span id="normal-text">Quick Access</span>
-		            <button id="expand-open-box">View all</button>
-	            </div>	
+			<div id="slide3" class="slide">
+				<h3 class="head-writeup">What We Believe</h3>
+				<p class="writeup">
+					<ul>
+						<li><span class="text-bold">Personalised Career Exploration:
+</span><span class:"plain-text">Not everyone should be a doctor, and not everyone should be an engineer. Using our interactive assessment tools, students can discover careers that genuinely align with their interests, strengths, and personality. From Agriculture to Zoology, we cover the full spectrum of courses offered in Nigerian tertiary institutions, as well as emerging fields like Data Science, Cybersecurity, and Renewable Energy.</span></li>
+						<li><span class="text-bold">Course vs. Subject Matching:
+</span><span class:"plain-text">One of the biggest mistakes students make is choosing subjects in SS1 that automatically disqualify them from their dream courses later. Our platform analyses JAMB subject combination requirements and O’Level prerequisites in real time, alerting students early if their subject mix won’t open the doors they want.</span></li>
+						<li><span class="text-bold">University & Polytechnic Navigator:
+</span><span class:"plain-text">With over 170 universities, polytechnics, and colleges of education in Nigeria, deciding where to apply can be overwhelming. We provide up‑to‑date information on admission requirements, cut‑off marks, school fees, location, and available courses across federal, state, and private institutions—so students and parents can compare options side by side.</span></li>
+						<li><span class="text-bold">Progress Tracking & Study Tips:
+</span><span class:"plain-text">Secondary school is a marathon, not a sprint. Our platform lets students log their termly results, visualise their academic progress over time, and get practical, subject‑specific study advice. Whether you’re struggling with Mathematics or aiming for a distinction in Literature, we’ve got actionable tips backed by learning science.</span></li>
+					</ul>
+				</p>
+			</div>
+		</div>
 
-	            <div id="second-box" class="second-box">
-		            <button id="subject-1" class="Menu2">
-			            <div class="icon-box-inner"><img id="sub-1" src="Logos/compass.svg" alt="Subject button"/></div>
-			            <span class="button-label">Explore</span>
-		            </button>
-		
-		            <button id="career" class="Menu2">
-			            <div class="icon-box-inner"><img id="bag" src="Logos/bag.svg" alt="Career button"/></div>
-			            <span class="button-label">Careers</span>
-		            </button>
-		
-    		        <button id="course" class="Menu2">
-	        		    <div class="icon-box-inner"><img id="cap" src="Logos/cap.svg" alt="Course Selection Button"/></div>
-			            <span class="button-label">Courses</span>
-		            </button>
-		
-        		    <button id="university" class="Menu2">
-		        	    <div class="icon-box-inner"><img id="Uni" src="Logos/school.svg" alt="University Select Button"/></div>
-			            <span class="button-label">Universities</span>
-		            </button>
-		
-    		        <button id="admission" class="Menu2 hidden-option">
-	    		        <div class="icon-box-inner"><img id="scripT" src="Logos/script.svg" alt="Admission Requirement Check Button"/></div>
-		    	        <span class="button-label">Admissions</span>
-		            </button>
-		
-		            <button id="bot" class="Menu2 hidden-option">
-			            <div class="icon-box-inner"><img id="ai" src="Logos/bot.svg" alt="AI Assistance"/></div>
-			            <span class="button-label">AI Bot</span>
-		            </button>
-		
-		            <button id="none" class="Menu2 hidden-option">
-			            <div class="icon-box-inner"><img id="empty" src="Logos/empty.svg" alt="Coming Soon"/></div>
-			            <span class="button-label">Coming Soon</span>
-		            </button>
-	            </div>
-            </div>
-
-            <div id="recommended" class="open-box-head">
-                <!--Wordpress would fill-in this gap-->
-                <span>Recommended for You</span>
-                <button id="expand-open-box2">View all</button>
-            </div>
-
-            <div class="card skeleton">
-                <div class="skeleton-image"></div>
-            </div>
-            <div class="card skeleton">
-                <div class="skeleton-image"></div>
-            </div>
-            <div class="card skeleton">
-                <div class="skeleton-image"></div>
-            </div>
-
-            <div id="progress" class="open-box-container">
-                <div id="progress-head" class="open-box-head"><span>Your Progress</span></div>
-            </div>
-            <div id="progress-body"><div id="progress-body-inner"><img id="recorD" src="Logos/progress.svg" alt="No record yet" /></div></div>
-
-            <div id="reask-container" class="open-box-container">
-                <div id="reask" class="open-box-container">
-                    <div id="organize-reask">
-	                <img id="target" src="Logos/target.svg" alt="assessment button">
-	                <div id="target-text"><span id="target-head-text">Not sure where to start</span><div><span id="target-main-text">Take our AI-powered assessment to discover careers that match your interests.</span></div></div>
-                    </div>
-	                <button id="start-assessment" class="menu1-button"><span>Start Assessment</span></button>
-                </div>
-            </div>
-            <div id="page-half"></div>
-        </div>
+		<div id="navigation-tab">
+    		<div class="dot active-dot" data-slide="0"></div>
+    		<div class="dot" data-slide="1"></div>
+    		<div class="dot" data-slide="2"></div>
+		</div>
 
 
 
-<!... JavaScript part of the code...> 
-        <script>
-            const API_BASE = 'http://ssguide.local/wp-json';
+		<script>
+			const container = document.getElementById('slider-container');
+			const dots = document.querySelectorAll('.dot');
+			let startX = 0;
+			let currentSlide = 0;
+			const totalSlides = 3;
 
-            // ---------- AUTHENTICATION CHECK ----------
-            async function checkAuth() {
-                const token = localStorage.getItem('jwtToken');
-                if (!token) {
-                    window.location.href = 'login.html';
-                    return;
-                }
+			dots.forEach(dot => {
+				dot.addEventListener('click', ()=> {
+					const slideIndex = parseInt(dot.getAttribute('data-slide'));
+					currentSlide = slideIndex;
+					updateSlides();
+				});
+			});
 
-                try {
-                    const res = await fetch(`${API_BASE}/wp/v2/users/me`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    if (!res.ok) {
-                        throw new Error('Token invalid');
-                    }
-                    // Token is valid; show dashboard
-                    document.getElementById('main-content').style.display = 'block';
-                } catch (err) {
-                    localStorage.removeItem('jwtToken');
-                    window.location.href = 'login.html';
-                }
-            }
+			// 1. Listen for when the finger touches the screen
+			container.addEventListener('touchstart', (e) => {
+				startX = e.touches[0].clientX;
+			});
 
-            (function() {
-                const menuToggle = document.querySelector('.menu-toggle');
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('sidebar-overlay');
 
-                function openSidebar() {
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-                menuToggle.classList.add('menu-open');
-                }
+			// 2. Listen for when the finger lifts off the screen
+			container.addEventListener('touchend', (e) => {
+				let endX = e.changedTouches[0].clientX;
+				let diffX = startX - endX;
 
-                function closeSidebar() {
-                    sidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                    menuToggle.classList.remove('menu-open');
-                }
+				// Minimum swipe distance required to switch slides (50 pixels)
+				if (Math.abs(diffX) > 50) {
+					if (diffX > 0) {
+				// Swiped Left -> Go to Next Slide
+						if (currentSlide < totalSlides - 1) {
+							currentSlide++;
+            					}
+						} else {
+						// Swiped Right -> Go to Previous Slide
+							if (currentSlide > 0) {
+								currentSlide--;
+							}
+						}
+						updateSlides();
+				}
+			});
+			const buttonBox = document.getElementById('yellow-button');
 
-                menuToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (sidebar.classList.contains('active')) {
-                        closeSidebar();
-                    } else {
-                        openSidebar();
-                    }
-                });
+			function updateSlides() {
+			// Shift the slider container horizontally
+				container.style.transform = `translateX(-${currentSlide * 100}vw)`;
+			// 1. Show button ONLY on the first slide (index 0)
+				if (currentSlide === 0) {
+					buttonBox.classList.add('visible');
+    				} else {
+					buttonBox.classList.remove('visible');
+    						}
+			// 2. Update dots highlight state
+				dots.forEach((dot, index) => {
+					if (index === currentSlide) {
+						dot.classList.add('active-dot');
+					} else {
+						dot.classList.remove('active-dot');
+					}
+				});
+			}
 
-                overlay.addEventListener('click', closeSidebar);
+			updateSlides();
+		</script>
 
-                // Close sidebar when pressing Escape key
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-                        closeSidebar();
-                    }
-                });
-            })();
-
-            //--------------LOADER & ANIMATIONS & QUICK ACCESS TOGGLE----------------
-            window.addEventListener('load', async function() {
-                // First, verify the JWT token
-                await checkAuth();
-
-                // If we're still here, the dashboard is visible
-                var loaderWrapper = document.getElementById('load_wrapper');
-                var logoImg = document.getElementById('logo_img');
-                var searchBox = document.getElementById('search-box-container');
-                var purpleBox = document.getElementById('purple');
-
-                // Fetch backend data (update URL later)
-                const skeletonElement = document.getElementById('skeleton-container');
-                const contentElement = document.getElementById('real-content-container');
-
-                if (skeletonElement && contentElement) {
-                    fetch('https://example.com')
-                        .then(response => response.json())
-                        .then(data => {
-                            skeletonElement.style.display = 'none';
-                            contentElement.style.display = 'block';
-                        })
-                        .catch(error => console.error('Error fetching data:', error));
-                }
-
-                setTimeout(function(){
-                    logoImg.classList.remove('ember-effect');
-                    loaderWrapper.style.opacity = '0';
-
-                    setTimeout(function(){
-                        loaderWrapper.style.display = 'none';
-                        searchBox.classList.add('search-animate');
-                        purpleBox.classList.add('search-animate2');
-                    }, 500);
-                }, 2000);
-
-                // "View all" toggle
-                var expandBtn = document.getElementById('expand-open-box');
-                if (expandBtn) {
-                    expandBtn.addEventListener('click', function() {
-                        var extraButtons = document.querySelectorAll('.hidden-option, .revealed-option');
-                        if (expandBtn.textContent.trim() === "View all") {
-                            extraButtons.forEach(function(button) {
-                                button.classList.remove('hidden-option');
-                                button.classList.add('revealed-option');
-                            });
-                            expandBtn.textContent = "Show less";
-                        } else {
-                            extraButtons.forEach(function(button) {
-                                button.classList.add('hidden-option');
-                                button.classList.remove('revealed-option');
-                            });
-                            expandBtn.textContent = "View all";
-                        }
-                    });
-                }
-            });    
-        </script>
-    </body>
-</html>
+	</body>
+</html>  

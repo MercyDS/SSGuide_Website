@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="others">
 <head>
     <meta charset="UTF-8">
     <title>Course Guide - Login</title>
@@ -81,7 +81,7 @@
                 }
                 const data = await res.json();
                 localStorage.setItem('jwtToken', data.token);
-                window.location.href = 'index.html';
+                window.location.href = 'main.html';
             } catch (error) {
                 alert(error.message);
             }
