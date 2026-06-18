@@ -20,6 +20,11 @@ body {
     margin: 0;
 }
 
+#bckgimblend {
+    display:block;
+    position: fixed;
+}
+
 #slider-container {
     display: flex;
     width: 300%;
@@ -99,13 +104,14 @@ ul li {
     flex-direction: column; /* Stacks everything top-to-bottom on mobile */
     align-items:center ;/*ddddd*/
     text-align: center;
-    padding-top: 8vh;
+    padding-top: 6vh;
     padding-left: 0;
 }
+
 #ssg-text {
     width: 80%;
     max-width: 400px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     margin-top: 10px;
 }
 #ssg-text img {
@@ -117,7 +123,7 @@ ul li {
 #slide1-cover {
     width: 100%;
     height: auto;
-    margin-bottom: 50px; /*ddddd*/
+    margin-bottom: 30px; /*ddddd*/
     align-self: flex-start;
 }
 #slide1-cover img {
@@ -136,7 +142,7 @@ ul li {
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     transition: transform 0.4s ease;
 }
 #yellow-button:active {
@@ -193,15 +199,16 @@ ul li {
         top: 0;
         left: 0;
         margin-top: 20px;
-        width: 650px;
+        max-width: 640px;
+        width:40%;
+        /*max-width: 650px;*/
         height: auto;
         align-self: left;
         z-index: 50;
     }
     /* Right Content Layout for Desktop */
     #ssg-text {
-        margin-bottom: 300px;
-        width: px;
+        margin-bottom: 250px;
     }
 
      #ssg-text img {
