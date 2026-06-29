@@ -27,6 +27,8 @@ body {
 
 #slider-container {
     display: flex;
+    position:absolute; /*The cause of the nav-bar not working as expected */
+    z-index: 98; /*The cause of the nav-bar not working as expected */
     width: 300%;
     transition: transform 0.4s ease-in-out;
     touch-action: pan-y;
@@ -42,11 +44,11 @@ body {
 }
 /* Navigation dots at the very bottom */
 #navigation-tab {
-    position: fixed;
+    position:fixed;
+    z-index: 99;
     bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10;
     display: flex;
     gap: 14px;          /* a little more breathing room */
 }
@@ -171,6 +173,7 @@ ul li {
 #socials button {
     background: transparent;
     border: 0;
+    cursor: pointer;
 }
 .activE {
     transition: transform 0.3s ease;
