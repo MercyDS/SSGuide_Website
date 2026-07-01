@@ -333,6 +333,7 @@
                 <div id="Menu1">
                     <button id="explore" class="menu1-button">Explore Careers</button>
                     <button id="assessment" class="menu1-button blue-btn" onclick="openAssessment()">Take Assessment</button>
+                    <button id="ai-chat-btn" class="menu1-button blue-btn" onclick="openAiChat()">💬 Talk to Counselor</button>
                 </div>
             </div>
             <div id="second-half">
@@ -435,6 +436,23 @@
             <!-- Dynamic form container -->
             <div id="questionnaire"></div>
 
+        </div>
+    </div>
+
+    <!-- ===== AI CHAT OVERLAY ===== -->
+    <div id="ai-chat-overlay" style="display:none;">
+        <div id="ai-chat-container">
+            <div id="ai-chat-header">
+                <h3>Academic Counselor</h3>
+                <button id="ai-chat-close" onclick="closeAiChat()" aria-label="Close chat">✕</button>
+            </div>
+            <div id="ai-chat-messages">
+                <p class="ai-loading">Loading conversation…</p>
+            </div>
+            <div id="ai-chat-input-area">
+                <textarea id="ai-chat-input" rows="2" placeholder="Ask a question..."></textarea>
+                <button id="ai-chat-send">Send</button>
+            </div>
         </div>
     </div>
 
@@ -732,16 +750,121 @@
             return String(text).replace(/[&<>"']/g, m => map[m]);
         }
 
+        // ─── AI CHAT ──────────────────────────────────────────────────────
+        async function openAiChat() {
+            document.getElementById('ai-chat-overlay').style.display = 'flex';
+            document.body.classList.add('no-scroll');   // reuse your existing lock class
+            await loadChatHistory();
+        }
+
+        function closeAiChat() {
+            document.getElementById('ai-chat-overlay').style.display = 'none';
+            document.body.classList.remove('no-scroll');
+        }
+
+        async function loadChatHistory() {
+            const token = localStorage.getItem('jwtToken');
+            const msgDiv = document.getElementById('ai-chat-messages');
+            msgDiv.innerHTML = '<p class="ai-loading">Loading conversation…</p>';
+
+            try {   
+                const res = await fetch(`${API_BASE}/ssguide/v1/ai-chat`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error('Failed to load chat history');
+                const data = await res.json();
+                renderMessages(data.messages);
+            } catch (e) {
+                msgDiv.innerHTML = `<p class="ai-loading">Error: ${e.message}</p>`;
+            }
+        }
+
+        function renderMessages(messages) {
+            const msgDiv = document.getElementById('ai-chat-messages');
+            msgDiv.innerHTML = '';
+            if (!messages || messages.length === 0) {
+                msgDiv.innerHTML = '<p class="ai-loading">No conversation yet. Click Send to start.</p>';
+                return;
+            }
+            // Hide system messages from the student (optional)
+            const visible = messages.filter(m => m.role !== 'system');
+            visible.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = `message ${msg.role}`;
+                div.textContent = msg.content;
+                msgDiv.appendChild(div);
+            });
+            msgDiv.scrollTop = msgDiv.scrollHeight;
+        }
+
+        async function sendAiMessage() {
+            const input = document.getElementById('ai-chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const sendBtn = document.getElementById('ai-chat-send');
+            sendBtn.disabled = true;
+            input.disabled = true;
+
+            const token = localStorage.getItem('jwtToken');
+            try {
+                const res = await fetch(`${API_BASE}/ssguide/v1/ai-chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ message })
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || 'Failed to send message');
+                }
+                const data = await res.json();
+                renderMessages(data.messages);
+            } catch (e) {
+                alert('Error: ' + e.message);
+            } finally {
+                sendBtn.disabled = false;
+                input.disabled = false;
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // Attach event listeners after DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('ai-chat-send').addEventListener('click', sendAiMessage);
+            document.getElementById('ai-chat-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendAiMessage();
+                }
+            });
+            // Close chat when clicking backdrop
+            document.getElementById('ai-chat-overlay').addEventListener('click', function(e) {
+                if (e.target === this) closeAiChat();
+            });
+        });
+
+        // Also allow closing with Escape (you already have an Escape listener, we can extend it)
+        // We'll modify your existing Escape listener to also close the chat if it's open.
+
         // ─── CLOSE ON OVERLAY CLICK ──────────────────────────────────
         document.getElementById('questionnaire-contain').addEventListener('click', function(e) {
             if (e.target === this) closeAssessment();
         });
 
-        // ─── KEYBOARD: ESC to close ──────────────────────────────────
+        // ─── KEYBOARD: ESC to close overlays ─────────────────────────
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                const container = document.getElementById('questionnaire-contain');
-                if (container.style.display === 'flex') closeAssessment();
+                const assess = document.getElementById('questionnaire-contain');
+                const chat = document.getElementById('ai-chat-overlay');
+                if (chat && chat.style.display === 'flex') {
+                    closeAiChat();
+                } else if (assess && assess.style.display === 'flex') {
+                    closeAssessment();
+                }
             }
         });
     </script>
