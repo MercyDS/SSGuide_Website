@@ -11,7 +11,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
+            width: 100vw; 
             height: 100vh;
             display: none;
             /* toggled via JS */
@@ -786,8 +786,8 @@
                 msgDiv.innerHTML = '<p class="ai-loading">No conversation yet. Click Send to start.</p>';
                 return;
             }
-            // Hide system messages from the student (optional)
-            const visible = messages.filter(m => m.role !== 'system');
+            // Hide system messages AND the initial hidden profile message
+            const visible = messages.filter(m => m.role !== 'system' && !m.hidden);
             visible.forEach(msg => {
                 const div = document.createElement('div');
                 div.className = `message ${msg.role}`;
