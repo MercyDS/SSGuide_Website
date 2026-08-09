@@ -910,6 +910,7 @@ html.others, body.others {
     justify-content: center;
     align-items: center;
 }
+
 #ai-chat-container {
     width: 90%;
     max-width: 500px;
@@ -921,6 +922,7 @@ html.others, body.others {
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+
 #ai-chat-header {
     background: #0056b3;
     color: #fff;
@@ -930,23 +932,28 @@ html.others, body.others {
     align-items: center;
     flex-shrink: 0;
 }
+
 #ai-chat-header h3 { margin: 0; font-size: 1.1rem; }
+
 #ai-chat-close {
     background: none; border: none;
     color: #fff; font-size: 20px; cursor: pointer;
     line-height: 1;
 }
+
 #ai-chat-messages {
     flex: 1;
     overflow-y: auto;
     padding: 15px;
     background: #f8faff;
 }
+
 #ai-chat-messages .message {
     margin-bottom: 12px;
     max-width: 80%;
     word-wrap: break-word;
 }
+
 #ai-chat-messages .message.user {
     margin-left: auto;
     background: #0056b3;
@@ -954,6 +961,7 @@ html.others, body.others {
     border-radius: 18px 18px 4px 18px;
     padding: 10px 15px;
 }
+
 #ai-chat-messages .message.assistant,
 #ai-chat-messages .message.system {
     background: #e2e8f0;
@@ -961,14 +969,17 @@ html.others, body.others {
     border-radius: 18px 18px 18px 4px;
     padding: 10px 15px;
 }
+
 #ai-chat-messages .message.system {
     font-style: italic;
     color: #555;
 }
+
 .ai-loading {
     text-align: center;
     color: #666;
 }
+
 #ai-chat-input-area {
     display: flex;
     padding: 10px;
@@ -976,6 +987,7 @@ html.others, body.others {
     background: #fff;
     flex-shrink: 0;
 }
+
 #ai-chat-input {
     flex: 1;
     border: 1px solid #ccc;
@@ -984,6 +996,7 @@ html.others, body.others {
     resize: none;
     font-family: inherit;
 }
+
 #ai-chat-send {
     background: #0056b3;
     color: #fff;
@@ -994,7 +1007,67 @@ html.others, body.others {
     cursor: pointer;
     font-weight: 500;
 }
+
 #ai-chat-send:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.auth-error {
+    background-color: #fff0f0;
+    color: #b30000;
+    padding: 10px 14px;border-radius: 8px;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+    border: 1px solid #ffcccc;
+    display: block; 
+}
+
+/* ─── DYNAMIC RATINGS (does not touch existing layout) ─── */
+.growth-bar-wrapper {
+    width: 100%;
+    background: #e0e0e0;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+.growth-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+.growth-text {
+    font-size: 14px;
+    color: #1f2a40;
+    margin-bottom: 5px;
+}
+.course-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.course-name {
+    width: 130px;
+    font-weight: 500;
+    font-size: 14px;
+}
+.course-bar {
+    flex: 1;
+    background: #e0e0e0;
+    border-radius: 10px;
+    height: 14px;
+    overflow: hidden;
+}
+.course-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+.course-percent {
+    font-size: 13px;
+    width: 45px;
+    text-align: right;
 }

@@ -411,6 +411,15 @@
                 <button id="start-assessment" class="menu1-button"><span>Start Assessment</span></button>
             </div>
         </div>
+
+        <!-- Course Matches (dynamic, appears after ratings load) -->
+        <div id="course-matches-container" class="open-box-container" style="display:none;">
+            <div class="open-box-head">
+                <span>Your Top Course Matches</span>
+            </div>
+            <div id="course-matches-content"></div>
+        </div>
+
         <div id="page-half"></div>
     </div>
 
@@ -867,6 +876,86 @@
                 }
             }
         });
+
+        // ─── LOAD & DISPLAY RATINGS ────────────────────────────────────
+        async function loadAndRenderRatings() {
+            const growthContainer = document.getElementById('progress-body-inner');
+            const courseContainer = document.getElementById('course-matches-container');
+            const courseContent = document.getElementById('course-matches-content');
+
+            // Show loading state in growth area
+            growthContainer.innerHTML = '<p style="color:#666; text-align:center;">Loading growth rating…</p>';
+
+            const token = localStorage.getItem('jwtToken');
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/ssguide/v1/student-ratings`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    // If no ratings available, show original placeholder and keep course section hidden
+                    growthContainer.innerHTML = '<img id="recorD" src="Logos/progress.svg" alt="No record yet" style="width:30%; height:auto; opacity:0.3;">';
+                    courseContainer.style.display = 'none';
+                    return;
+                }
+                const ratings = await res.json();
+
+                // ── Render growth rating ──────────────────────────────
+                if (ratings.growth_rating) {
+                    const color = getRatingColor(ratings.growth_rating);
+                    growthContainer.innerHTML = `
+                        <div class="growth-text">Academic Growth: <strong>${ratings.growth_rating}%</strong></div>
+                        <div class="growth-bar-wrapper">
+                            <div class="growth-bar-fill" style="width:${ratings.growth_rating}%; background:${color};"></div>
+                        </div>
+                        <p style="font-size:13px; color:#4a5568; margin-top:5px;">${ratings.growth_summary || ''}</p>
+                    `;
+                } else {
+                    growthContainer.innerHTML = '<img id="recorD" src="Logos/progress.svg" alt="No record yet" style="width:30%; height:auto; opacity:0.3;">';
+                }
+
+                // ── Render course matches ─────────────────────────────
+                if (ratings.course_matches && ratings.course_matches.length > 0) {
+                    courseContainer.style.display = 'block';
+                    let html = '';
+                    ratings.course_matches.forEach(course => {
+                        html += `
+                            <div class="course-row">
+                                <span class="course-name">${course.course}</span>
+                                <div class="course-bar">
+                                    <div class="course-bar-fill" style="width:${course.rating}%; background:${getRatingColor(course.rating)};"></div>
+                                </div>
+                                <span class="course-percent">${course.rating}%</span>
+                            </div>
+                        `;
+                    });
+                    courseContent.innerHTML = html;
+                } else {
+                    courseContainer.style.display = 'none';
+                }
+            } catch (error) {
+                growthContainer.innerHTML = '<p style="color:#b33; text-align:center;">Could not load ratings.</p>';
+                courseContainer.style.display = 'none';
+            }
+        }
+
+        function getRatingColor(percentage) {
+            if (percentage >= 80) return '#27ae60';
+            if (percentage >= 60) return '#f39c12';
+            return '#e74c3c';
+        }
+
+        // Trigger on page load (after main content is visible)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (document.getElementById('main-content').style.display === 'block') {
+                    loadAndRenderRatings();
+                }
+            }, 1000);
+        });
+
     </script>
 
 </body>

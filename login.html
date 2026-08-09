@@ -1,115 +1,202 @@
 <!DOCTYPE html>
 <html class="others">
-<head>
-    <meta charset="UTF-8">
-    <title>Course Guide - Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="login-page">
-    <div id="body_equ">
-        <img id="on-top-logo" src="Logos/Logo.svg" alt="Course Guide Logo">
+    <head>
+        <meta charset="UTF-8">
+        <title>Course Guide - Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body class="login-page">
+        <div id="body_equ">
+            <img id="on-top-logo" src="Logos/Logo.svg" alt="Course Guide Logo">
 
-        <div class="frame" id="frame1">
-            <!-- ========== LOGIN FORM ========== -->
-            <div id="login-panel" class="auth-panel">
-                <span class="auth-title">Login</span>
-                <div class="frame" id="frame2">
-                    <form id="login-form" class="auth-form">
-                        <label for="login-username">Username</label>
-                        <input type="text" id="login-username" class="clean" placeholder="Enter your username" required>
+            <div class="frame" id="frame1">
+                <!-- ========== LOGIN FORM ========== -->
+                <div id="login-panel" class="auth-panel">
+                    <span class="auth-title">Login</span>
+                    <div class="frame" id="frame2">
+                        <form id="login-form" class="auth-form">
+                            <label for="login-username">Username</label>
+                            <input type="text" id="login-username" class="clean" placeholder="Enter your username" required>
 
-                        <label for="login-password">Password</label>
-                        <input type="password" id="login-password" class="clean" placeholder="••••••••" required>
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" class="clean" placeholder="••••••••" required>
 
-                        <input id="submit-login" type="submit" value="Log In">
-                    </form>
+                            <div id="login-error" class="auth-error" style="display: none;"></div> <!--New line to add my own error report-->
+
+                            <input id="submit-login" type="submit" value="Log In">
+                        </form>
+                    </div>
+                    <p class="switch-text">Don't have an account? <span id="show-register">Register here</span></p>
                 </div>
-                <p class="switch-text">Don't have an account? <span id="show-register">Register here</span></p>
-            </div>
 
-            <!-- ========== REGISTRATION FORM (hidden by default) ========== -->
-            <div id="register-panel" class="auth-panel" style="display: none;">
-                <span class="auth-title">Create Account</span>
-                <div class="frame" id="frame2">
-                    <form id="register-form" class="auth-form">
-                        <label for="reg-username">Username</label>
-                        <input type="text" id="reg-username" class="clean" placeholder="Choose a username" required>
+                <!-- ========== REGISTRATION FORM (hidden by default) ========== -->
+                <div id="register-panel" class="auth-panel" style="display: none;">
+                    <span class="auth-title">Create Account</span>
+                    <div class="frame" id="frame2">
+                        <form id="register-form" class="auth-form">
+                            <label for="reg-username">Username</label>
+                            <input type="text" id="reg-username" class="clean" placeholder="Choose a username" required>
 
-                        <label for="reg-email">Email</label>
-                        <input type="email" id="reg-email" class="clean" placeholder="example@gmail.com" required>
+                            <label for="reg-email">Email</label>
+                            <input type="email" id="reg-email" class="clean" placeholder="example@gmail.com" required>
 
-                        <label for="reg-password">Password</label>
-                        <input type="password" id="reg-password" class="clean" placeholder="Create a password" required>
+                            <label for="reg-password">Password</label>
+                            <input type="password" id="reg-password" class="clean" placeholder="Create a password" required>
 
-                        <input id="submit-register" type="submit" value="Register">
-                    </form>
+                             <div id="register-error" class="auth-error" style="display: none;"></div> <!--New line to add my own error report-->
+
+                            <input id="submit-register" type="submit" value="Register">
+                        </form>
+                    </div>
+                    <p class="switch-text">Already have an account? <span id="show-login">Log in</span></p>
                 </div>
-                <p class="switch-text">Already have an account? <span id="show-login">Log in</span></p>
             </div>
         </div>
-    </div>
 
-    <script>
-        document.getElementById('show-register').addEventListener('click', () => {
-            document.getElementById('login-panel').style.display = 'none';
-            document.getElementById('register-panel').style.display = 'flex';
-        });
-
-        document.getElementById('show-login').addEventListener('click', () => {
-            document.getElementById('register-panel').style.display = 'none';
-            document.getElementById('login-panel').style.display = 'flex';
-        });
-
-        const API_BASE = 'http://ssguide.local/wp-json';
-
-        // ---------- LOGIN ----------
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            try {
-                const res = await fetch(`${API_BASE}/jwt-auth/v1/token`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                if (!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.message || 'Login failed');
-                }
-                const data = await res.json();
-                localStorage.setItem('jwtToken', data.token);
-                window.location.href = 'main.html';
-            } catch (error) {
-                alert(error.message);
+        <script>
+            const API_BASE = 'http://ssguide.local/wp-json';
+            // ---------- HELPER: Show/hide inline errors ----------
+            function showError(elementId, message) {
+                const el = document.getElementById(elementId);
+                el.textContent = message;
+                el.style.display = 'block';
             }
-        });
-
-        // ---------- REGISTER ----------
-        document.getElementById('register-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('reg-username').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-
-            try {
-                const res = await fetch(`${API_BASE}/wp/v2/users/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password })
-                });
-                if (!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.message || 'Registration failed');
-                }
-                alert('Account created! You can now log in.');
-                document.getElementById('show-login').click();
-            } catch (error) {
-                alert(error.message);
+            function hideError(elementId) {
+                const el = document.getElementById(elementId);
+                el.style.display = 'none';
+                el.textContent = '';
             }
-        });
-    </script>
-</body>
+            function stripHtml(html){
+                const temp = document.createElement('div');
+                temp.innerHTML = html;
+                return temp.texyContent || temp.innerText || '';
+            }
+
+            //Helper to check if the wordpress server is reachable
+            async function isServerOnline(){
+                try {
+                    const res = await fetch(`${API_BASE}`, {method: 'GET' });
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
+
+            // ---------- TOGGLE FORMS ----------
+            document.getElementById('show-register').addEventListener('click', () => {
+                document.getElementById('login-panel').style.display = 'none';
+                document.getElementById('register-panel').style.display = 'flex';
+                hideError('register-error');   // clear any old error
+            });
+            document.getElementById('show-login').addEventListener('click', () => {
+                document.getElementById('register-panel').style.display = 'none';
+                document.getElementById('login-panel').style.display = 'flex';
+                hideError('login-error');
+            });
+            // ---------- LOGIN ----------
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('login-username').value.trim();
+                const password = document.getElementById('login-password').value.trim();
+
+                hideError('login-error');
+
+                if (!username || !password) {
+                    showError('login-error', 'Please fill in both username and password.');
+                    return;
+                }
+
+                const online = await isServerOnline();
+                if (!online){
+                    showError('login-error', 'The server appears to be offline. Please try again later.')
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`${API_BASE}/jwt-auth/v1/token`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+                    // Try to parse JSON – if it fails, we'll show a server error
+                    let data;
+                    try {
+                        data = await res.json();
+                    } catch (jsonError) {
+                        showError('login-error', 'Unexpected server response. Please try again later.');
+                        return;
+                    }
+                    if (!res.ok) {
+                        // Server returned an error – use its message or a fallback
+                        const rawMessage = data?.message || 'Login failed. Please check your credentials.'
+                         const message = stripHtml(rawMessage);
+                        showError('login-error', message);
+                        return;
+                    }
+                    // Success
+                    localStorage.setItem('jwtToken', data.token);
+                    window.location.href = 'main.html';
+                } catch (error) {
+                    // This catch only handles network errors (fetch itself failed)
+                    showError('login-error', 'A network error occurred. Please check your connection.');
+                }
+            });
+            // ---------- REGISTER ----------
+            document.getElementById('register-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('reg-username').value.trim();
+                const email = document.getElementById('reg-email').value.trim();
+                const password = document.getElementById('reg-password').value.trim();
+                hideError('register-error');
+                if (!username || !email || !password) {
+                    showError('register-error', 'Please fill in all fields.');
+                    return;
+                }
+                const online = await isServerOnline();
+                if (!online){
+                    showError('register-error','The server appears to be ofline. Please start your local site and try again.');
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`${API_BASE}/wp/v2/users/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, email, password })
+                    });
+                    let data;
+                    try {
+                        data = await res.json();
+                    } catch (jsonError) {
+                        showError('register-error', 'Unexpected server response. Please try again later.');
+                        return;
+                    }
+                    if (!res.ok) {
+                        const rawMessage = data?.message || 'Registration failed. Please try again.';
+                        const message = stripHtml(rawMessage);
+                        showError('register-error', message);
+                        return;
+                    }
+                    // Success – green message, then switch to login
+                    const regError = document.getElementById('register-error');
+                    regError.style.color = '#0b6623';
+                    regError.style.backgroundColor = '#e6ffed';
+                    regError.style.borderColor = '#a3d9a5';
+                    regError.textContent = 'Account created! You can now log in.';
+                    regError.style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('show-login').click();
+                        // Reset colours
+                        regError.style.color = '';
+                        regError.style.backgroundColor = '';
+                        regError.style.borderColor = '';
+                        hideError('register-error');
+                    }, 2000);
+                } catch (error) {
+                    showError('register-error', 'A network error occurred. Please check your connection.');
+                }
+            });
+        </script>
+    </body>
 </html>
