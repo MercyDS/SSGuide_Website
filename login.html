@@ -22,7 +22,11 @@
                             <label for="login-password">Password</label>
                             <input type="password" id="login-password" class="clean" placeholder="••••••••" required>
 
-                            <div id="login-error" class="auth-error" style="display: none;"></div> <!--New line to add my own error report-->
+                            <div style="text-align: right; margin-top: -8px; margin-bottom: 8px;">
+                                <a href="#" id="forgot-password-link" style="color: #dcd0e6; font-size: 13px; text-decoration: underline;">Forgot password?</a>
+                            </div>
+
+                            <div id="login-error" class="auth-error" style="display: none;"></div>
 
                             <input id="submit-login" type="submit" value="Log In">
                         </form>
@@ -56,6 +60,30 @@
 
         <script>
             const API_BASE = 'http://ssguide.local/wp-json';
+
+            // ─── CHECK URL PARAMS FOR VERIFICATION STATUS ──────
+            window.addEventListener('DOMContentLoaded', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+            
+                if (urlParams.get('verified') === '1') {
+                    const errorEl = document.getElementById('login-error');
+                    errorEl.style.display = 'block';
+                    errorEl.style.backgroundColor = '#e6ffed';
+                    errorEl.style.color = '#0b6623';
+                    errorEl.style.borderColor = '#a3d9a5';
+                    errorEl.textContent = '✅ Email verified! You can now log in.';
+                }
+            
+                if (urlParams.get('reset') === '1') {
+                    const errorEl = document.getElementById('login-error');
+                    errorEl.style.display = 'block';
+                    errorEl.style.backgroundColor = '#e6ffed';
+                    errorEl.style.color = '#0b6623';
+                    errorEl.style.borderColor = '#a3d9a5';
+                    errorEl.textContent = '✅ Password reset successful! You can now log in.';
+                }
+            });
+
             // ---------- HELPER: Show/hide inline errors ----------
             function showError(elementId, message) {
                 const el = document.getElementById(elementId);
@@ -70,7 +98,7 @@
             function stripHtml(html){
                 const temp = document.createElement('div');
                 temp.innerHTML = html;
-                return temp.texyContent || temp.innerText || '';
+                return temp.textContent || temp.innerText || '';
             }
 
             //Helper to check if the wordpress server is reachable
@@ -119,7 +147,7 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
                     });
-                    // Try to parse JSON – if it fails, we'll show a server error
+
                     let data;
                     try {
                         data = await res.json();
@@ -127,21 +155,45 @@
                         showError('login-error', 'Unexpected server response. Please try again later.');
                         return;
                     }
+
                     if (!res.ok) {
-                        // Server returned an error – use its message or a fallback
-                        const rawMessage = data?.message || 'Login failed. Please check your credentials.'
-                         const message = stripHtml(rawMessage);
+                        let rawMessage = data?.message || 'Login failed. Please check your credentials.';
+                        let message = stripHtml(rawMessage);
+                        
+                        // Special handling for unverified emails
+                        if (rawMessage.includes('verify your email')) {
+                            message = '📧 ' + rawMessage + ' If you didn\'t receive the email, please check your spam folder or contact support.';
+                        }
+                        
                         showError('login-error', message);
                         return;
                     }
-                    // Success
+
+                                       // Success
                     localStorage.setItem('jwtToken', data.token);
-                    window.location.href = 'main.html';
+
+                    // Check role via custom endpoint
+                    fetch(`${API_BASE}/ssguide/v1/me`, {
+                        headers: { 'Authorization': `Bearer ${data.token}` }
+                    })
+                    .then(r => r.json())
+                    .then(user => {
+                        const roles = user.roles || [];
+                        if (roles.includes('counselor')) {
+                            window.location.href = 'counselor.html';
+                        } else {
+                            window.location.href = 'main.html';
+                        }
+                    })
+                    .catch(() => {
+                        window.location.href = 'main.html';
+                    });
                 } catch (error) {
-                    // This catch only handles network errors (fetch itself failed)
+                    // Network or unexpected error
                     showError('login-error', 'A network error occurred. Please check your connection.');
                 }
             });
+
             // ---------- REGISTER ----------
             document.getElementById('register-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -183,7 +235,7 @@
                     regError.style.color = '#0b6623';
                     regError.style.backgroundColor = '#e6ffed';
                     regError.style.borderColor = '#a3d9a5';
-                    regError.textContent = 'Account created! You can now log in.';
+                    regError.textContent = '📧 Account created! Please check your email for the verification link before logging in.';
                     regError.style.display = 'block';
                     setTimeout(() => {
                         document.getElementById('show-login').click();
@@ -192,11 +244,40 @@
                         regError.style.backgroundColor = '';
                         regError.style.borderColor = '';
                         hideError('register-error');
-                    }, 2000);
+                    }, 3000); // Increased to 3 seconds so users can read the message
                 } catch (error) {
                     showError('register-error', 'A network error occurred. Please check your connection.');
                 }
             });
+
+            // ─── FORGOT PASSWORD ────────────────────────────────
+            document.getElementById('forgot-password-link')?.addEventListener('click', async (e) => {
+                e.preventDefault();
+            
+                const email = prompt('Enter your registered email address to receive a password reset link:');
+                if (!email) return;
+            
+                const errorEl = document.getElementById('login-error');
+            
+                try {
+                    const res = await fetch(`${API_BASE}/ssguide/v1/forgot-password`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email })
+                    });
+                
+                    const data = await res.json();
+                
+                    if (!res.ok) {
+                        throw new Error(data.message || 'Request failed.');
+                    }
+                
+                    alert('✅ ' + data.message);
+                } catch (error) {
+                    alert('❌ ' + error.message);
+                }
+            });
+
         </script>
     </body>
 </html>

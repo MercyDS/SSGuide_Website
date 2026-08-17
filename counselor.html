@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="others">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Guide - Counselor Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .counselor-container {
+            max-width: 1000px;
+            margin: 90px auto 30px;
+            padding: 20px;
+        }
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .student-table th, .student-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .student-table th {
+            background: #0056b3;
+            color: #fff;
+            font-weight: 600;
+        }
+        .student-table tr:hover {
+            background: #f8faff;
+        }
+        .progress-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .completed { background: #e6ffed; color: #0b6623; }
+        .pending { background: #fff0f0; color: #b30000; }
+        .btn {
+            background: #0056b3;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .detail-panel {
+            margin-top: 30px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .detail-section {
+            margin-bottom: 20px;
+        }
+        .detail-section h3 {
+            margin-bottom: 10px;
+            color: #0d1b2a;
+        }
+        .note-box {
+            background: #f8faff;
+            border-left: 4px solid #0056b3;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            min-height: 80px;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body class="others">
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="logo-group">
+            <img class="logo_left" src="Logos/Logo.svg" alt="Course Guidance Portal Logo">
+            <div class="logo-text">
+                <span class="brand-title">Course Guide</span>
+                <span class="brand-subtitle">Counselor Dashboard</span>
+            </div>
+        </div>
+        <div id="icon-container">
+            <button class="btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="counselor-container">
+        <h1>Students Overview</h1>
+        <p style="color:#666; margin-bottom:20px;">Click a student to view full details and add notes.</p>
+        <div id="students-table-container">
+            <p style="color:#666;">Loading students…</p>
+        </div>
+        <div id="student-detail" class="detail-panel" style="display:none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://ssguide.local/wp-json';
+
+        // ─── AUTH CHECK ──────────────────────────────────────────
+                async function checkCounselorAuth() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/ssguide/v1/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error('Token invalid');
+                const user = await res.json();
+
+                // Ensure user has counselor role
+                const roles = user.roles || [];
+                if (!roles.includes('counselor')) {
+                    alert('Access denied. Counselors only.');
+                    window.location.href = 'main.html';
+                    return;
+                }
+
+                loadStudents();
+            } catch (_) {
+                localStorage.removeItem('jwtToken');
+                window.location.href = 'login.html';
+            }
+        }
+        // ─── LOAD STUDENTS LIST ─────────────────────────────────
+        async function loadStudents() {
+            const container = document.getElementById('students-table-container');
+            container.innerHTML = '<p style="color:#666;">Loading students…</p>';
+
+            const token = localStorage.getItem('jwtToken');
+            try {
+                const res = await fetch(`${API_BASE}/ssguide/v1/students`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error('Failed to load students');
+                const students = await res.json();
+
+                if (!students || students.length === 0) {
+                    container.innerHTML = '<p style="color:#666;">No students found.</p>';
+                    return;
+                }
+
+                let html = `
+                    <table class="student-table">
+                        <thead><tr><th>Username</th><th>Email</th><th>Progress</th><th>Growth</th><th>Action</th></tr></thead>
+                        <tbody>
+                `;
+                students.forEach(student => {
+                    const progressClass = student.progress_completed ? 'completed' : 'pending';
+                    const progressLabel = student.progress_completed ? 'Completed' : 'Pending';
+                    const growth = student.growth_rating ? student.growth_rating + '%' : 'N/A';
+
+                    html += `
+                        <tr>
+                            <td>${student.username}</td>
+                            <td>${student.email}</td>
+                            <td><span class="progress-badge ${progressClass}">${progressLabel}</span></td>
+                            <td>${growth}</td>
+                            <td><button class="btn" onclick="viewStudent(${student.id})">View</button></td>
+                        </tr>
+                    `;
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `<p style="color:#b33;">Error: ${error.message}</p>`;
+            }
+        }
+
+        // ─── VIEW STUDENT DETAIL ────────────────────────────────
+        async function viewStudent(studentId) {
+            const token = localStorage.getItem('jwtToken');
+            const detailPanel = document.getElementById('student-detail');
+            detailPanel.style.display = 'block';
+            detailPanel.innerHTML = '<p>Loading student data…</p>';
+
+            try {
+                const res = await fetch(`${API_BASE}/ssguide/v1/student-detail/${studentId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error('Failed to load student');
+                const student = await res.json();
+
+                // Render profile
+                let profileHtml = student.profile.replace(/\n/g, '<br>');
+
+                // Render counselor notes
+                let notesHtml = '';
+                if (student.counselor_notes && student.counselor_notes.length > 0) {
+                    student.counselor_notes.forEach(note => {
+                        notesHtml += `<div class="note-box"><strong>${note.counselor_name}:</strong> ${note.message}</div>`;
+                    });
+                } else {
+                    notesHtml = '<p style="color:#666;">No notes yet.</p>';
+                }
+
+                // Render AI chat history (last 5 messages)
+                let chatHtml = '';
+                if (student.chat_history && student.chat_history.length > 0) {
+                    const visible = student.chat_history.filter(m => m.role !== 'system' && !m.hidden);
+                    const lastFive = visible.slice(-5);
+                    lastFive.forEach(msg => {
+                        chatHtml += `<p style="margin-bottom:5px;"><strong>${msg.role === 'user' ? 'Student' : 'AI'}:</strong> ${msg.content}</p>`;
+                    });
+                } else {
+                    chatHtml = '<p style="color:#666;">No AI conversation yet.</p>';
+                }
+
+                detailPanel.innerHTML = `
+                    <h2>${student.username}</h2>
+                    <div class="detail-section">
+                        <h3>Profile</h3>
+                        <p>${profileHtml}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h3>Growth Rating</h3>
+                        <p>${student.ratings?.growth_rating || 'N/A'}% – ${student.ratings?.growth_summary || ''}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h3>AI Chat History (recent)</h3>
+                        ${chatHtml}
+                    </div>
+                    <div class="detail-section">
+                        <h3>Counselor Notes</h3>
+                        ${notesHtml}
+                        <textarea id="new-note" placeholder="Write a note to guide this student..."></textarea>
+                        <button class="btn" onclick="addNote(${student.id})">Add Note</button>
+                    </div>
+                `;
+            } catch (error) {
+                detailPanel.innerHTML = `<p style="color:#b33;">Error: ${error.message}</p>`;
+            }
+        }
+
+        // ─── ADD COUNSELOR NOTE ─────────────────────────────────
+        async function addNote(studentId) {
+            const message = document.getElementById('new-note').value.trim();
+            if (!message) return alert('Please write a note.');
+
+            const token = localStorage.getItem('jwtToken');
+            try {
+                const res = await fetch(`${API_BASE}/ssguide/v1/counselor-notes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ student_id: studentId, message })
+                });
+                if (!res.ok) throw new Error('Failed to save note');
+                alert('Note saved.');
+                viewStudent(studentId); // refresh detail
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // ─── LOGOUT ─────────────────────────────────────────────
+        function logout() {
+            localStorage.removeItem('jwtToken');
+            window.location.href = 'login.html';
+        }
+
+        // ─── INIT ───────────────────────────────────────────────
+        window.addEventListener('load', checkCounselorAuth);
+    </script>
+</body>
+</html>

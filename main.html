@@ -384,9 +384,9 @@
             <span>Recommended for You</span>
             <button id="expand-open-box2">View all</button>
         </div>
-        <div class="card skeleton"><div class="skeleton-image"></div></div>
-        <div class="card skeleton"><div class="skeleton-image"></div></div>
-        <div class="card skeleton"><div class="skeleton-image"></div></div>
+
+        <!-- Dynamic course matches (AI) -->
+        <div id="course-matches-content" style="padding: 0 15px; max-width: 1200px; margin: 0 auto;"></div>
 
         <!-- Progress -->
         <div id="progress" class="open-box-container">
@@ -477,11 +477,23 @@
                 window.location.href = 'login.html';
                 return;
             }
+
             try {
-                const res = await fetch(`${API_BASE}/wp/v2/users/me`, {
+                const res = await fetch(`${API_BASE}/ssguide/v1/me`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!res.ok) throw new Error('Token invalid');
+
+                const user = await res.json();
+                const roles = user.roles || [];
+
+                // If counselor tries to access student page, redirect them
+                if (roles.includes('counselor')) {
+                    window.location.href = 'counselor.html';
+                    return;
+                }
+
+                // Otherwise show the main dashboard
                 document.getElementById('main-content').style.display = 'block';
             } catch (_) {
                 localStorage.removeItem('jwtToken');
@@ -795,14 +807,36 @@
                 msgDiv.innerHTML = '<p class="ai-loading">No conversation yet. Click Send to start.</p>';
                 return;
             }
-            // Hide system messages AND the initial hidden profile message
-            const visible = messages.filter(m => m.role !== 'system' && !m.hidden);
-            visible.forEach(msg => {
+
+            messages.forEach(msg => {
+                if (msg.role === 'system' || msg.hidden) return;
+
                 const div = document.createElement('div');
-                div.className = `message ${msg.role}`;
-                div.textContent = msg.content;
+
+                if (msg.role === 'counselor') {
+                    div.className = 'message counselor';
+                    const initial = msg.counselor_name
+                        ? msg.counselor_name.charAt(0).toUpperCase()
+                        : 'C';
+
+                    div.innerHTML = `
+                        <div class="counselor-meta">
+                            <span class="counselor-avatar">${initial}</span>
+                            <span class="counselor-label">${msg.counselor_name || 'Counselor'}</span>
+                        </div>
+                        <div class="counselor-bubble">${msg.content}</div>
+                    `;
+                } else if (msg.role === 'user') {
+                    div.className = 'message user';
+                    div.textContent = msg.content;
+                } else if (msg.role === 'assistant') {
+                    div.className = 'message assistant';
+                    div.textContent = msg.content;
+                }
+
                 msgDiv.appendChild(div);
             });
+
             msgDiv.scrollTop = msgDiv.scrollHeight;
         }
 
@@ -955,7 +989,7 @@
                 }
             }, 1000);
         });
-
+        
     </script>
 
 </body>
