@@ -1131,3 +1131,34 @@ html.others, body.others {
     font-size: 14px;
     color: #1f2a40;
 }
+
+.parent-btn {
+    background-color: #6a1b9a; /* deep purple */
+    color: #ffffff;
+    border: none;
+}
+
+.parent-btn:hover {
+    background-color: #4a148c;
+}
+
+.parent-badge {
+    display: inline-block;
+    background: #ffd54f;
+    color: #3e2723;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.parent-note {
+    background: #f3e5f5;
+    border-left: 6px solid #6a1b9a;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: #4a148c;
+    font-size: 14px;
+}

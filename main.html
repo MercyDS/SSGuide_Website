@@ -320,6 +320,58 @@
                 <img class="search-icon" src="Logos/Icon_lens.svg" alt="Search Icon" onerror="this.style.display='none'">
                 <input type="text" placeholder="Search for courses, careers, or subjects..." class="search-input">
             </div>
+
+            <!-- Parent Assessment Overlay -->
+<div id="parent-assessment-overlay" style="display:none;">
+    <div id="parent-assessment-box">
+        <button id="close-parent-assessment" onclick="closeParentAssessment()">✕</button>
+
+        <span class="parent-badge">👨‍👩‍👦 For Parents Only</span>
+        <h3>Parent/Guardian Assessment</h3>
+        <div class="parent-note">
+            Please fill this section honestly. Your input helps us guide your child better.
+            Students should not complete this part.
+        </div>
+
+        <form id="parent-form">
+            <label>Student ID</label>
+            <input type="number" id="parent-student-id" required>
+
+            <label>What career do you want for your child?</label>
+            <input type="text" id="parent-career-choice">
+
+            <label>Why this career?</label>
+            <textarea id="parent-reason"></textarea>
+
+            <label>Financial capacity</label>
+            <select id="parent-finance">
+                <option>Low</option><option>Medium</option><option>High</option>
+            </select>
+
+            <label>How much influence should your opinion have?</label>
+            <select id="parent-influence">
+                <option>Low</option><option>Medium</option><option>High</option>
+            </select>
+
+            <label>Level of support you can provide</label>
+            <select id="parent-support">
+                <option>Low</option><option>Medium</option><option>High</option>
+            </select>
+
+            <label>Preferred institution type</label>
+            <select id="parent-institution">
+                <option>Public University</option>
+                <option>Private University</option>
+                <option>Polytechnic</option>
+                <option>College of Education</option>
+            </select>
+
+            <button type="submit">Submit Parent Assessment</button>
+        </form>
+        <p id="parent-status"></p>
+    </div>
+</div>
+
         </div>
 
         <!-- Hero -->
@@ -334,6 +386,7 @@
                     <button id="explore" class="menu1-button">Explore Careers</button>
                     <button id="assessment" class="menu1-button blue-btn" onclick="openAssessment()">Take Assessment</button>
                     <button id="ai-chat-btn" class="menu1-button blue-btn" onclick="openAiChat()">💬 Talk to Counselor</button>
+                    <button id="parent-assessment-btn" class="menu1-button parent-btn" onclick="openParentAssessment()">👨‍👩‍👦 Parent Assessment</button>
                 </div>
             </div>
             <div id="second-half">
@@ -467,7 +520,7 @@
 
     <!-- ===== JAVASCRIPT ===== -->
     <script>
-        const API_BASE = 'http://ssguide.local/wp-json';
+        const API_BASE = 'https://finishing-definition-amplifier-created.trycloudflare.com/wp-json';
         const ASSESSMENT_POST_ID = 1;
 
         // ─── AUTH CHECK ──────────────────────────────────────────────
@@ -988,6 +1041,56 @@
                     loadAndRenderRatings();
                 }
             }, 1000);
+        });
+
+        // ─── PARENT ASSESSMENT ─────────────────────────────
+        async function openParentAssessment() {
+            document.getElementById('parent-assessment-overlay').style.display = 'flex';
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeParentAssessment() {
+            document.getElementById('parent-assessment-overlay').style.display = 'none';
+            document.body.classList.remove('no-scroll');
+        }
+
+        document.getElementById('parent-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('parent-status');
+
+            const payload = {
+                student_id: parseInt(document.getElementById('parent-student-id').value),
+                parent_career_choice: document.getElementById('parent-career-choice').value,
+                parent_reason: document.getElementById('parent-reason').value,
+                parent_finance: document.getElementById('parent-finance').value,
+                parent_influence: document.getElementById('parent-influence').value,
+                parent_support_level: document.getElementById('parent-support').value,
+                parent_institution_type: document.getElementById('parent-institution').value,
+            };
+
+            const token = localStorage.getItem('jwtToken');
+
+            try {
+                const res = await fetch(`${API_BASE}/ssguide/v1/parent-assessment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    status.textContent = '✅ Parent assessment saved successfully!';
+                    status.style.color = '#0b6623';
+                } else {
+                    status.textContent = data.message || 'Failed to save';
+                    status.style.color = '#b30000';
+                }
+            } catch (error) {
+                status.textContent = 'Network error. Please try again.';
+                status.style.color = '#b30000';
+            }
         });
         
     </script>
